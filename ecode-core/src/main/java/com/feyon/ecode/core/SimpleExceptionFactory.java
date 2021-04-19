@@ -1,10 +1,7 @@
-package com.feyon.ecode.core.gmt;
+package com.feyon.ecode.core;
 
-import com.feyon.ecode.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -26,16 +23,20 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         this.ecodeHandler = ecodeHandler;
     }
 
+    @Override
     public void setEcodeFactory(EcodeFactory ecodeFactory) {
         this.ecodeFactory = ecodeFactory;
     }
 
     @Override
+    public void setEcodeHandler(EcodeHandler ecodeHandler) {
+        this.ecodeHandler = ecodeHandler;
+    }
+
     public EcodeFactory getEcodeFactory() {
         return this.ecodeFactory;
     }
 
-    @Override
     public EcodeHandler getEcodeHandler() {
         return this.ecodeHandler;
     }
@@ -46,8 +47,8 @@ public class SimpleExceptionFactory implements ExceptionFactory {
     }
 
     @Override
-    public RuntimeException newInstance(Class<? extends RuntimeException> exType) {
-        String code = this.ecodeHandler.getCode(exType);
+    public RuntimeException newException(Class<? extends RuntimeException> exType) {
+        String code = this.ecodeHandler.extractCode(exType);
         Ecode ecode = getEcodeFromFactory(code);
         if(ecode != null) {
             return createException(exType, ecode.getMessage());
@@ -56,7 +57,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
     }
 
     @Override
-    public RuntimeException newInstance(String code) {
+    public RuntimeException newException(String code) {
         Ecode ecode = getEcodeFromFactory(code);
         if(ecode != null) {
             return createException(rootExceptionClass, ecode.getMessage());
@@ -78,8 +79,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
 
     private RuntimeException createException(Class<? extends RuntimeException> clazz, String message) {
         try {
-            Constructor<? extends RuntimeException> constructor =
-                    ReflectionUtils.accessibleConstructor(clazz, String.class);
+            Constructor<? extends RuntimeException> constructor = clazz.getConstructor(String.class);
             return  constructor.newInstance(message);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             String errMsg = "the rootExceptionClass is not Exception";
@@ -87,6 +87,5 @@ public class SimpleExceptionFactory implements ExceptionFactory {
             throw new EcodeException(errMsg);
         }
     }
-
 
 }

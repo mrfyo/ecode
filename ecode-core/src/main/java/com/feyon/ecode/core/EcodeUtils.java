@@ -12,23 +12,33 @@ public class EcodeUtils {
         EcodeUtils.ecodeManager = ecodeManager;
     }
 
-    public static RuntimeException newInstance(Class<? extends RuntimeException> exType) {
+    public static RuntimeException toThrow(Class<? extends RuntimeException> exType) {
         checkFactory();
-        return ecodeManager.newInstance(exType);
+        return ecodeManager.getExceptionFactory().newException(exType);
     }
 
-    public static RuntimeException newInstance(String code) {
-        return ecodeManager.newInstance(code);
+    public static RuntimeException toThrow(String code) {
+        checkFactory();
+        return ecodeManager.getExceptionFactory().newException(code);
     }
 
     public static Ecode getEcode(Class<? extends Exception> exType) {
         checkFactory();
-        String code = ecodeManager.getEcodeHandler().getCode(exType);
+        String code = ecodeManager.getEcodeHandler().extractCode(exType);
         return getEcode(code);
     }
 
     public static Ecode getEcode(String code) {
-        return ecodeManager.getEcode(code);
+        return ecodeManager.getEcodeFactory().getEcode(code);
+    }
+
+
+    public static <T extends Ecode>  T getEcode(String code, Class<T> ecodeType) {
+        Ecode ecode = getEcode(code);
+        if(ecodeType.isInstance(ecode)) {
+            return ecodeType.cast(ecode);
+        }
+        throw new ClassCastException("the ecode is not instance for " + ecodeType);
     }
 
 

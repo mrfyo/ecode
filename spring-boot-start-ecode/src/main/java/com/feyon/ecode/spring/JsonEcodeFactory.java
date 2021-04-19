@@ -1,34 +1,30 @@
-package com.feyon.ecode.core.gmt;
+package com.feyon.ecode.spring;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.feyon.ecode.core.Ecode;
-import com.feyon.ecode.core.EcodeException;
-import com.feyon.ecode.core.EcodeFactory;
+import com.feyon.ecode.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Feyon
  *
  * JsonEcodeFacory 借助 Jackson 将指定路径下的JSON文件序列化为指定类型（实现 ErrorCode接口），并缓存。
  *
- * 默认使用的ErrorCode类型 为 {@link SimpleErrorCode}
+ * 默认使用的Ecode类型 为 {@link SimpleEcode}
  *
  */
 
-public class JsonEcodeFactory implements EcodeFactory {
+public class JsonEcodeFactory extends AbstractEcodeFactory {
 
     private final Logger log = LoggerFactory.getLogger(JsonEcodeFactory.class);
 
@@ -36,21 +32,20 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     private String location = DEFAULT_LOCATION;
 
-    private final Map<String, Ecode> ecodeCache = new ConcurrentHashMap<>();
+    private Class<? extends Ecode> ecodeType;
 
     private ObjectMapper objectMapper;
 
-    private Class<? extends Ecode> supportErrorCode;
 
-    public JsonEcodeFactory(ObjectMapper objectMapper) {
-        this(DEFAULT_LOCATION, objectMapper);
+    public JsonEcodeFactory(ObjectMapper objectMapper, Class<? extends Ecode> ecodeType) {
+        this(DEFAULT_LOCATION, objectMapper, ecodeType);
     }
 
-    public JsonEcodeFactory(String location, ObjectMapper objectMapper) {
+    public JsonEcodeFactory(String location, ObjectMapper objectMapper, Class<? extends Ecode> ecodeType) {
         this.location = location;
         this.objectMapper = objectMapper;
-        setSupportErrorCode(SimpleErrorCode.class);
-        loadEcode();
+        this.ecodeType = ecodeType;
+        initEcodeCache();
     }
 
     public void setObjectMapper(ObjectMapper objectMapper) {
@@ -61,32 +56,24 @@ public class JsonEcodeFactory implements EcodeFactory {
         this.location = location;
     }
 
-    public void setSupportErrorCode(Class<? extends Ecode> supportErrorCode) {
-        this.supportErrorCode = supportErrorCode;
+    public void setEcodeType(Class<? extends Ecode> ecodeType) {
+        this.ecodeType = ecodeType;
+    }
+
+    public Class<? extends Ecode> getEcodeType() {
+        return ecodeType;
     }
 
     @Override
-    public String getMessage(String code) {
-        Ecode ecode = getEcode(code);
-        return ecode != null ? ecode.getMessage() : null;
-    }
-
-    @Override
-    public Ecode getEcode(String code) {
-        Assert.state(objectMapper != null, "the JsonEcodeFactory is need the jackson frame." +
-                "please set the objectMapper.");
-        return ecodeCache.get(code);
-    }
-
-
-    private void loadEcode() {
+    public List<Ecode> loadAllEcode() {
+        List<Ecode> list = new ArrayList<>(16);
         try {
             File dir = ResourceUtils.getFile(location);
             if(dir.isDirectory()) {
                 File[] files = dir.listFiles((fp) -> fp.getName().endsWith(".json"));
                 if(files != null) {
                     for (File file : files) {
-                        loadEcodeFromJson(file).forEach((ec) -> ecodeCache.put(ec.getCode(), ec));
+                        list.addAll(loadEcodeFromJson(file));
                     }
                 }
             }else {
@@ -97,20 +84,20 @@ public class JsonEcodeFactory implements EcodeFactory {
                     "if you change the directory, please reset the location. {}", DEFAULT_LOCATION, location);
             fe.printStackTrace();
         }
-
-
-
-    }
-
-    private List<? extends Ecode> loadEcodeFromJson(File file){
-        return doLoadEcodeFromJson(file, getErrorCodeClass());
+        return list;
     }
 
 
-    private <T> List<T> doLoadEcodeFromJson(File file, Class<T> clazz) {
-        List<T> errorCodes = null;
+    private List<Ecode> loadEcodeFromJson(File file){
+        return doLoadEcodeFromJson(file);
+    }
+
+
+    private List<Ecode> doLoadEcodeFromJson(File file) {
+        List<Ecode> errorCodes = null;
         try {
-            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, clazz);
+            Class<? extends Ecode> ecodeType = getEcodeType();
+            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, ecodeType);
             errorCodes = objectMapper.readValue(file, javaType);
         }catch (JsonParseException | JsonMappingException jpe) {
             log.error("json file does not conform to the format, file is " + file.getName());
@@ -120,10 +107,5 @@ public class JsonEcodeFactory implements EcodeFactory {
         return errorCodes;
     }
 
-
-
-    Class<? extends Ecode> getErrorCodeClass() {
-        return this.supportErrorCode;
-    }
 
 }

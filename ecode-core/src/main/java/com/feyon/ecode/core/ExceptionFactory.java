@@ -8,15 +8,15 @@ public interface ExceptionFactory {
 
     /**
      * 获取 Ecode 工厂类
-     * @return {@link EcodeFactory}
+     * @param ecodeFactory  {@link EcodeFactory}
      */
-    EcodeFactory getEcodeFactory();
+    void setEcodeFactory(EcodeFactory ecodeFactory);
 
     /**
      * 获取 Ecode 处理类
-     * @return {@link EcodeHandler}
+     * @param ecodeHandler {@link EcodeHandler}
      */
-    EcodeHandler getEcodeHandler();
+    void setEcodeHandler(EcodeHandler ecodeHandler);
 
     /**
      * 设置 根异常类类型
@@ -29,14 +29,14 @@ public interface ExceptionFactory {
      * @param exType 自定义异常类
      * @return 代理异常类
      */
-    RuntimeException newInstance(Class<? extends RuntimeException> exType);
+    RuntimeException newException(Class<? extends RuntimeException> exType);
 
     /**
      * 生成异常类，直接指定 code
      * @param code 错误码的 code
      * @return 代理异常类
      */
-    RuntimeException newInstance(String code);
+    RuntimeException newException(String code);
 
 
 }

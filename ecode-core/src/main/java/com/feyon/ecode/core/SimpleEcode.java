@@ -1,23 +1,21 @@
-package com.feyon.ecode.core.gmt;
-
-import com.feyon.ecode.core.Ecode;
+package com.feyon.ecode.core;
 
 import java.io.Serializable;
 
 /**
  * @author Feyon
  */
-public class SimpleErrorCode implements Ecode, Serializable {
+public class SimpleEcode implements Ecode, Serializable {
 
 
     private String code;
 
     private String message;
 
-    public SimpleErrorCode() {
+    public SimpleEcode() {
     }
 
-    public SimpleErrorCode(String code, String message) {
+    public SimpleEcode(String code, String message) {
         this.code = code;
         this.message = message;
     }

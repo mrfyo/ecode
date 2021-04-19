@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class UserService {
 
     public void login(){
-        throw EcodeUtils.newInstance(UserException.class);
+        throw EcodeUtils.toThrow(UserException.class);
     }
 }

@@ -10,5 +10,5 @@ public interface EcodeHandler {
      * @param exceptionClass 异常类
      * @return 错误码
      */
-    String getCode(Class<?> exceptionClass);
+    String extractCode(Class<?> exceptionClass);
 }

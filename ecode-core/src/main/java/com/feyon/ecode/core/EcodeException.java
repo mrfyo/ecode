@@ -5,8 +5,7 @@ package com.feyon.ecode.core;
  */
 public class EcodeException extends RuntimeException {
 
-    public EcodeException() {
-    }
+    public EcodeException() { }
 
     public EcodeException(String message) {
         super(message);

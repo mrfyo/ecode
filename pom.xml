@@ -11,6 +11,7 @@
     <modules>
         <module>ecode-core</module>
         <module>ecode-sample</module>
+        <module>spring-boot-start-ecode</module>
     </modules>
 
     <properties>

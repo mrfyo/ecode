@@ -1,8 +1,5 @@
-package com.feyon.ecode.core.gmt;
+package com.feyon.ecode.core;
 
-import com.feyon.ecode.core.Ecode;
-import com.feyon.ecode.core.EcodeHandler;
-import com.feyon.ecode.core.EcodeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +12,7 @@ public class AnnotationEcodeHandler implements EcodeHandler {
 
 
     @Override
-    public String getCode(Class<?> ec) {
+    public String extractCode(Class<?> ec) {
         if(ec.isAssignableFrom(Throwable.class)) {
             log.warn("the exceptionClass is not exception class, error use annotation [Ecode], class is, {}", ec);
             return null;
