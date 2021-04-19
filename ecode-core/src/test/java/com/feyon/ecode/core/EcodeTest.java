@@ -16,13 +16,9 @@ public class EcodeTest {
         System.out.println("hello Ecode");
     }
 
-    @Autowired
-    private UserException exception;
 
     @Test
     void createUserException() {
-        String message = exception.getMessage();
-        System.out.println(message);
     }
 
 }

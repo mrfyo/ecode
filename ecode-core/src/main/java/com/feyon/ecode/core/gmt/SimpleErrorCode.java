@@ -1,13 +1,13 @@
 package com.feyon.ecode.core.gmt;
 
-import com.feyon.ecode.core.ErrorCode;
+import com.feyon.ecode.core.Ecode;
 
 import java.io.Serializable;
 
 /**
  * @author Feyon
  */
-public class SimpleErrorCode implements ErrorCode, Serializable {
+public class SimpleErrorCode implements Ecode, Serializable {
 
 
     private String code;
@@ -40,4 +40,11 @@ public class SimpleErrorCode implements ErrorCode, Serializable {
         return code;
     }
 
+    @Override
+    public String toString() {
+        return "SimpleErrorCode{" +
+                "code='" + code + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

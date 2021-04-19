@@ -1,16 +1,16 @@
 package com.feyon.ecode.core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.feyon.ecode.core.EcodeFactory;
-import com.feyon.ecode.core.EcodeHandler;
-import com.feyon.ecode.core.EcodeLoader;
+import com.feyon.ecode.core.*;
 import com.feyon.ecode.core.gmt.AnnotationEcodeHandler;
+import com.feyon.ecode.core.gmt.DefaultEcodeManager;
 import com.feyon.ecode.core.gmt.JsonEcodeFactory;
-import com.feyon.ecode.core.gmt.EcodeAwareProcessor;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import com.feyon.ecode.core.gmt.SimpleExceptionFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author Feyon
@@ -37,14 +37,23 @@ public class EcodeAutoConfigure {
     }
 
     @Bean
-    @ConditionalOnMissingBean(EcodeLoader.class)
-    public BeanPostProcessor ecodeLoader(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
-        EcodeAwareProcessor processor = new EcodeAwareProcessor();
-        processor.setEcodeFactory(ecodeFactory);
-        processor.setEcodeHandler(ecodeHandler);
-        return processor;
+    @ConditionalOnMissingBean(ExceptionFactory.class)
+    public ExceptionFactory exceptionFactory(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
+        SimpleExceptionFactory exceptionFactory = new SimpleExceptionFactory(ecodeFactory, ecodeHandler);
+        exceptionFactory.setExceptionRootClass(EcodeException.class);
+
+        return exceptionFactory;
     }
 
+    @Bean
+    @ConditionalOnMissingBean(EcodeManager.class)
+    public EcodeManager ecodeManager(ExceptionFactory exceptionFactory) {
+        return new DefaultEcodeManager(exceptionFactory);
+    }
 
+    @PostConstruct
+    public void ecodeUtil(EcodeManager ecodeManager) {
+        EcodeUtils.setExceptionFactory(ecodeManager);
+    }
 
 }

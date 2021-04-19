@@ -3,7 +3,7 @@ package com.feyon.ecode.core;
 /**
  * @author Feyon
  */
-public class EcodeException extends RuntimeException{
+public class EcodeException extends RuntimeException {
 
     public EcodeException() {
     }
@@ -19,4 +19,6 @@ public class EcodeException extends RuntimeException{
     public EcodeException(Throwable cause) {
         super(cause);
     }
+
+
 }

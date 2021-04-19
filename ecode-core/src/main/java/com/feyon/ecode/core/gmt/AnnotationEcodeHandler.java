@@ -2,6 +2,7 @@ package com.feyon.ecode.core.gmt;
 
 import com.feyon.ecode.core.Ecode;
 import com.feyon.ecode.core.EcodeHandler;
+import com.feyon.ecode.core.EcodeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ public class AnnotationEcodeHandler implements EcodeHandler {
             log.warn("the exceptionClass is not exception class, error use annotation [Ecode], class is, {}", ec);
             return null;
         }
-        Ecode ecode = ec.getAnnotation(Ecode.class);
+        EcodeTag ecode = ec.getAnnotation(EcodeTag.class);
         if(ecode != null) {
             String code = ecode.code();
             if(code.isEmpty()) {

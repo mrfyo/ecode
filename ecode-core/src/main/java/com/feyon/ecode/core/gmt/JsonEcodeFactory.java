@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feyon.ecode.core.Ecode;
 import com.feyon.ecode.core.EcodeException;
 import com.feyon.ecode.core.EcodeFactory;
-import com.feyon.ecode.core.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -36,11 +36,11 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     private String location = DEFAULT_LOCATION;
 
-    private final Map<String, ErrorCode> ecodeCache = new ConcurrentHashMap<>();
+    private final Map<String, Ecode> ecodeCache = new ConcurrentHashMap<>();
 
     private ObjectMapper objectMapper;
 
-    private Class<? extends ErrorCode> supportErrorCode;
+    private Class<? extends Ecode> supportErrorCode;
 
     public JsonEcodeFactory(ObjectMapper objectMapper) {
         this(DEFAULT_LOCATION, objectMapper);
@@ -61,19 +61,21 @@ public class JsonEcodeFactory implements EcodeFactory {
         this.location = location;
     }
 
-    public void setSupportErrorCode(Class<? extends ErrorCode> supportErrorCode) {
+    public void setSupportErrorCode(Class<? extends Ecode> supportErrorCode) {
         this.supportErrorCode = supportErrorCode;
     }
 
     @Override
     public String getMessage(String code) {
+        Ecode ecode = getEcode(code);
+        return ecode != null ? ecode.getMessage() : null;
+    }
+
+    @Override
+    public Ecode getEcode(String code) {
         Assert.state(objectMapper != null, "the JsonEcodeFactory is need the jackson frame." +
                 "please set the objectMapper.");
-        ErrorCode errorCode = ecodeCache.get(code);
-        if(errorCode != null) {
-            return errorCode.getMessage();
-        }
-        return null;
+        return ecodeCache.get(code);
     }
 
 
@@ -100,7 +102,7 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     }
 
-    private List<? extends ErrorCode> loadEcodeFromJson(File file){
+    private List<? extends Ecode> loadEcodeFromJson(File file){
         return doLoadEcodeFromJson(file, getErrorCodeClass());
     }
 
@@ -120,7 +122,7 @@ public class JsonEcodeFactory implements EcodeFactory {
 
 
 
-    Class<? extends ErrorCode> getErrorCodeClass() {
+    Class<? extends Ecode> getErrorCodeClass() {
         return this.supportErrorCode;
     }
 
