@@ -1,7 +1,6 @@
 package com.feyon.ecode.core.gmt;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +21,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Feyon
+ *
+ * JsonEcodeFacory 借助 Jackson 将指定路径下的JSON文件序列化为指定类型（实现 ErrorCode接口），并缓存。
+ *
+ * 默认使用的ErrorCode类型 为 {@link SimpleErrorCode}
+ *
  */
 
 public class JsonEcodeFactory implements EcodeFactory {
@@ -36,6 +40,8 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     private ObjectMapper objectMapper;
 
+    private Class<? extends ErrorCode> supportErrorCode;
+
     public JsonEcodeFactory(ObjectMapper objectMapper) {
         this(DEFAULT_LOCATION, objectMapper);
     }
@@ -43,6 +49,7 @@ public class JsonEcodeFactory implements EcodeFactory {
     public JsonEcodeFactory(String location, ObjectMapper objectMapper) {
         this.location = location;
         this.objectMapper = objectMapper;
+        setSupportErrorCode(SimpleErrorCode.class);
         loadEcode();
     }
 
@@ -52,6 +59,10 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setSupportErrorCode(Class<? extends ErrorCode> supportErrorCode) {
+        this.supportErrorCode = supportErrorCode;
     }
 
     @Override
@@ -89,10 +100,16 @@ public class JsonEcodeFactory implements EcodeFactory {
 
     }
 
-    private List<SimpleErrorCode> loadEcodeFromJson(File file){
-        List<SimpleErrorCode>  errorCodes = null;
+    private List<? extends ErrorCode> loadEcodeFromJson(File file){
+        return doLoadEcodeFromJson(file, getErrorCodeClass());
+    }
+
+
+    private <T> List<T> doLoadEcodeFromJson(File file, Class<T> clazz) {
+        List<T> errorCodes = null;
         try {
-            errorCodes = objectMapper.readValue(file, new TypeReference<List<SimpleErrorCode>>() {});
+            JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, clazz);
+            errorCodes = objectMapper.readValue(file, javaType);
         }catch (JsonParseException | JsonMappingException jpe) {
             log.error("json file does not conform to the format, file is " + file.getName());
         }catch (IOException ie) {
@@ -101,5 +118,10 @@ public class JsonEcodeFactory implements EcodeFactory {
         return errorCodes;
     }
 
+
+
+    Class<? extends ErrorCode> getErrorCodeClass() {
+        return this.supportErrorCode;
+    }
 
 }
