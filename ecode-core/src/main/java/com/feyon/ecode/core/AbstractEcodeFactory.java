@@ -34,7 +34,7 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
     @Override
     public Ecode getEcode(String code) {
         if (ecodeCache.isEmpty()) {
-            throw new EcodeException("the ecode cache is empty.");
+            throw new EcodeException("the ecode cache is empty. please call the reload method or check your ecode data source");
         }
         return ecodeCache.get(code);
     }

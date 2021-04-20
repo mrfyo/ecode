@@ -12,9 +12,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EcodeTag {
 
+    /**
+     * 错误码（具有唯一性）
+     * @return 错误码
+     */
     String code();
 
+    /**
+     * 目前仅为提示作用
+     * @return 标记信息
+     */
     String message() default "";
-
-    boolean used() default false;
 }
