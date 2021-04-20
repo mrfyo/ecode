@@ -46,29 +46,59 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         this.rootExceptionClass = rootClass;
     }
 
-    public Class<? extends RuntimeException> getExceptionRootClass() {
+    protected Class<? extends RuntimeException> getExceptionRootClass() {
+        if(this.rootExceptionClass == null) {
+            throw new RuntimeException("the rootExceptionClass cannot is null");
+        }
         return this.rootExceptionClass;
     }
 
     @Override
     public RuntimeException newException(Class<? extends RuntimeException> exType) {
         String code = this.ecodeHandler.extractCode(exType);
+        return newException(exType, code);
+    }
+
+    @Override
+    public RuntimeException newException(Class<? extends RuntimeException> exType, String code) {
         Ecode ecode = getEcodeFromFactory(code);
-        if(ecode != null) {
-            return createException(getExceptionRootClass(), ecode.getMessage());
+        RuntimeException exception;
+        if(ecode == null) {
+            exception = createException(exType, "");
+        }else {
+            exception =  createException(exType, ecode.getMessage());
+            setEcodeToException(exception, ecode);
         }
-        return new EcodeException("the exception instance create fail");
+        return exception;
     }
 
     @Override
     public RuntimeException newException(String code) {
         Ecode ecode = getEcodeFromFactory(code);
-        if(ecode != null) {
-            return createException(getExceptionRootClass(), ecode.getMessage());
+        RuntimeException exception;
+        if(ecode == null) {
+            exception = createException(getExceptionRootClass(), "");
+        }else {
+            exception =  createException(getExceptionRootClass(), ecode.getMessage());
+            setEcodeToException(exception, ecode);
         }
-        return new EcodeException("the exception instance create fail");
+        return exception;
     }
 
+    private void setEcodeToException(RuntimeException exception, Ecode ecode) {
+        if(exception instanceof EcodeAware) {
+            ((EcodeAware)exception).setEcode(ecode);
+        }else {
+            log.warn("the rootExceptionClass is not implements EcodeAware, " +
+                    "exception created will only normal exception.");
+        }
+    }
+
+    /**
+     * 从{@link EcodeFactory}获取{@link Ecode}
+     * @param code 错误码
+     * @return 如果工厂中存在，返回{@link Ecode},否则返回 null.
+     */
     private Ecode getEcodeFromFactory(String code) {
         if(ecodeFactory == null) {
             String message = "the exception factory need the ecode-factory, but ecodeFactory is null";

@@ -26,6 +26,14 @@ public interface ExceptionFactory {
     RuntimeException newException(Class<? extends RuntimeException> exType);
 
     /**
+     * 根据给定的异常类型生成指定的异常类，同时根据指定的异常码动态注入相应错误的异常信息
+     * @param exType 自定义异常类，实现接口 {@link EcodeAware}
+     * @param code 有效错误码
+     * @return 指定类型的异常类
+     */
+    RuntimeException newException(Class<? extends RuntimeException> exType, String code);
+
+    /**
      * 根据给定的错误码，生成默认根异常类
      * @param code 错误码
      * @return 根异常类 实现接口 {@link EcodeAware}，默认是 {@link EcodeException}
