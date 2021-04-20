@@ -5,6 +5,9 @@ package com.feyon.ecode.core;
  */
 public interface EcodeFactory {
 
+    /**
+     * 工厂初始化
+     */
     void initialize();
 
     /**
