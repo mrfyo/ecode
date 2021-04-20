@@ -86,8 +86,8 @@ public class SimpleExceptionFactory implements ExceptionFactory {
     }
 
     private void setEcodeToException(RuntimeException exception, Ecode ecode) {
-        if(exception instanceof EcodeAware) {
-            ((EcodeAware)exception).setEcode(ecode);
+        if(exception instanceof EcodeSupport) {
+            ((EcodeSupport)exception).setEcode(ecode);
         }else {
             log.warn("the rootExceptionClass is not implements EcodeAware, " +
                     "exception created will only normal exception.");

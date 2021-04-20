@@ -1,12 +1,16 @@
 package com.feyon.ecode.sample;
 
-import com.feyon.ecode.core.EcodeTag;
+
+import com.feyon.ecode.core.Ecode;
+import com.feyon.ecode.core.EcodeSupport;
 
 /**
  * @author Feyon
  */
-@EcodeTag(code = "10000")
-public class UserException extends RuntimeException{
+public class UserException extends RuntimeException implements EcodeSupport {
+
+    protected Ecode ecode;
+
     public UserException() {
     }
 
@@ -16,5 +20,15 @@ public class UserException extends RuntimeException{
 
     public UserException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    @Override
+    public void setEcode(Ecode ecode) {
+        this.ecode = ecode;
+    }
+
+    @Override
+    public Ecode getEcode() {
+        return this.ecode;
     }
 }

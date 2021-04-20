@@ -23,10 +23,11 @@ public class AnnotationEcodeHandler implements EcodeHandler {
             if(code.isEmpty()) {
                log.warn("the Ecode.code cannot is empty, the Ecode could be solve.");
             }
-            return ecode.code();
+            return code;
         }else {
             log.warn("the exceptionClass is not supported by Ecode, class is {}, ", ec);
         }
         return null;
     }
+
 }

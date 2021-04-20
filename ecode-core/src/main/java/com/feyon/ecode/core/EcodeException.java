@@ -4,9 +4,9 @@ package com.feyon.ecode.core;
  * @author Feyon
  */
 
-public class EcodeException extends RuntimeException implements EcodeAware{
+public class EcodeException extends RuntimeException implements EcodeSupport{
 
-    public Ecode ecode;
+    private Ecode ecode;
 
     public EcodeException() { }
 
@@ -25,6 +25,11 @@ public class EcodeException extends RuntimeException implements EcodeAware{
     @Override
     public void setEcode(Ecode ecode) {
         this.ecode = ecode;
+    }
+
+    @Override
+    public Ecode getEcode() {
+        return this.ecode;
     }
 
 }
