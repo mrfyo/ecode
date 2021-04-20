@@ -1,12 +1,15 @@
 package com.feyon.ecode.core;
 
 /**
+ * 该接口用于从错误码数据源（如JSON文件，数据库）中加载所有的定义的异常码并缓存，同时提供根据错误码(code)
+ * 来查询已经缓存的错误码
+ *
  * @author Feyon
  */
 public interface EcodeFactory {
 
     /**
-     * 工厂初始化
+     * 工厂初始化，开始加载错误码，如果未执行该方法，将导致工厂中将无法获取异常码
      */
     void initialize();
 

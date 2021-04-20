@@ -11,13 +11,11 @@ public class EcodeUtils {
         EcodeUtils.ecodeManager = ecodeManager;
     }
 
-    @Deprecated
     public static RuntimeException toThrow(Class<? extends RuntimeException> exType) {
         checkManger();
         return ecodeManager.getExceptionFactory().newException(exType);
     }
 
-    @Deprecated
     public static RuntimeException toThrow(String code) {
         checkManger();
         return ecodeManager.getExceptionFactory().newException(code);

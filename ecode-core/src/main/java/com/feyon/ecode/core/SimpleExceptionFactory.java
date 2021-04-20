@@ -25,12 +25,10 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         setExceptionRootClass(EcodeException.class);
     }
 
-    @Override
     public void setEcodeFactory(EcodeFactory ecodeFactory) {
         this.ecodeFactory = ecodeFactory;
     }
 
-    @Override
     public void setEcodeHandler(EcodeHandler ecodeHandler) {
         this.ecodeHandler = ecodeHandler;
     }
@@ -43,11 +41,11 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         return this.ecodeHandler;
     }
 
+    @Override
     public void setExceptionRootClass(Class<? extends RuntimeException> rootClass) {
         this.rootExceptionClass = rootClass;
     }
 
-    @Override
     public Class<? extends RuntimeException> getExceptionRootClass() {
         return this.rootExceptionClass;
     }
