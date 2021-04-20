@@ -3,7 +3,7 @@ package com.feyon.ecode.core;
 /**
  * @author Feyon
  */
-public interface EcodeManager {
+public interface EcodeManager extends Reloadable{
 
     /**
      * return the {@link ExceptionFactory}

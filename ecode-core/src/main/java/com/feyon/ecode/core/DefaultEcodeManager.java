@@ -50,4 +50,8 @@ public class DefaultEcodeManager implements EcodeManager {
     }
 
 
+    @Override
+    public void reload() {
+        this.ecodeFactory.reload();
+    }
 }

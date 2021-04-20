@@ -9,8 +9,13 @@ public class EcodeUtils {
 
     private static EcodeManager ecodeManager;
 
+    /**
+     * 设置 {@link EcodeManager} 并重新加载
+     * @param ecodeManager {@link EcodeManager}
+     */
     public static void setEcodeManager(EcodeManager ecodeManager) {
         EcodeUtils.ecodeManager = ecodeManager;
+        ecodeManager.reload();
     }
 
     /**

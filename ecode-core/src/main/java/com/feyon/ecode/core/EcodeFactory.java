@@ -6,12 +6,7 @@ package com.feyon.ecode.core;
  *
  * @author Feyon
  */
-public interface EcodeFactory {
-
-    /**
-     * 工厂初始化，开始加载错误码，如果未执行该方法，将导致工厂中将无法获取异常码
-     */
-    void initialize();
+public interface EcodeFactory extends Reloadable{
 
     /**
      * 从工厂中加载错误码消息

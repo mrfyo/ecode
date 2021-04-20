@@ -20,7 +20,6 @@ public class EcodeApp {
                 return ecodeList;
             }
         };
-        ecodeFactory.initialize();
         EcodeHandler ecodeHandler = new AnnotationEcodeHandler();
         ExceptionFactory exceptionFactory = new SimpleExceptionFactory(ecodeFactory, ecodeHandler);
         EcodeManager manager = new DefaultEcodeManager(exceptionFactory, ecodeFactory, ecodeHandler);
@@ -29,14 +28,14 @@ public class EcodeApp {
 
     public void service() {
         System.out.println("start service");
-        throw EcodeUtils.toThrow(UserException.class);
+        throw EcodeUtils.toThrow("10000", UserException.class);
     }
 
     public void tryService() {
         try {
             service();
         }catch (RuntimeException e) {
-            Ecode ecode = EcodeUtils.getEcode(e.getClass());
+            Ecode ecode = EcodeUtils.getEcode(e);
             System.out.println(ecode);
         }
     }

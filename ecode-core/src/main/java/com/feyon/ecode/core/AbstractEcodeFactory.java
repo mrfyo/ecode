@@ -21,7 +21,7 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
     }
 
     @Override
-    public void initialize() {
+    public void reload() {
         initEcodeCache();
     }
 
