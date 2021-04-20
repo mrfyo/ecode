@@ -17,8 +17,13 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
     private final Map<String, Ecode> ecodeCache = new ConcurrentHashMap<>();
 
 
-    public AbstractEcodeFactory() { }
+    public AbstractEcodeFactory() {
+    }
 
+    @Override
+    public void initialize() {
+        initEcodeCache();
+    }
 
     @Override
     public String getMessage(String code) {
@@ -28,21 +33,26 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
 
     @Override
     public Ecode getEcode(String code) {
-         return ecodeCache.get(code);
+        if (ecodeCache.isEmpty()) {
+            throw new EcodeException("the ecode cache is empty.");
+        }
+        return ecodeCache.get(code);
     }
 
     protected void initEcodeCache() {
-        List<Ecode> list = loadAllEcode();
-        if(list != null) {
+        List<Ecode> list = getAllEcode();
+        if (list != null) {
             list.forEach(ecode -> ecodeCache.put(ecode.getCode(), ecode));
-        }else {
+        } else {
             throw new RuntimeException("the ecode list cannot be null.");
         }
     }
 
+
     /**
      * 加载所有的错误码
+     *
      * @return the ecode list, the list is not null.
      */
-    public abstract List<Ecode> loadAllEcode();
+    public abstract List<Ecode> getAllEcode();
 }

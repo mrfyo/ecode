@@ -18,11 +18,13 @@ public interface ExceptionFactory {
      */
     void setEcodeHandler(EcodeHandler ecodeHandler);
 
+
+
     /**
      * 设置 根异常类类型
-     * @param rootClass 根异常类类型
+     * @return  根异常类类型
      */
-    void setExceptionRootClass(Class<? extends RuntimeException> rootClass);
+    Class<? extends RuntimeException>  getExceptionRootClass();
 
     /**
      * 生成异常类

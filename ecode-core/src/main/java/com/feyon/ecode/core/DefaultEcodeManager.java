@@ -15,6 +15,7 @@ public class DefaultEcodeManager implements EcodeManager {
         this(new SimpleExceptionFactory(ecodeFactory, ecodeHandler), ecodeFactory, ecodeHandler);
     }
 
+
     public DefaultEcodeManager(ExceptionFactory exceptionFactory, EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
         this.exceptionFactory = exceptionFactory;
         this.ecodeFactory = ecodeFactory;
@@ -47,6 +48,7 @@ public class DefaultEcodeManager implements EcodeManager {
     public ExceptionFactory getExceptionFactory() {
         return this.exceptionFactory;
     }
+
 
 
 }

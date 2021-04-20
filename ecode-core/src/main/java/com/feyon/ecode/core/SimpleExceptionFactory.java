@@ -18,9 +18,11 @@ public class SimpleExceptionFactory implements ExceptionFactory {
 
     private EcodeHandler ecodeHandler;
 
+
     public SimpleExceptionFactory(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
         this.ecodeFactory = ecodeFactory;
         this.ecodeHandler = ecodeHandler;
+        setExceptionRootClass(EcodeException.class);
     }
 
     @Override
@@ -41,9 +43,13 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         return this.ecodeHandler;
     }
 
-    @Override
     public void setExceptionRootClass(Class<? extends RuntimeException> rootClass) {
         this.rootExceptionClass = rootClass;
+    }
+
+    @Override
+    public Class<? extends RuntimeException> getExceptionRootClass() {
+        return this.rootExceptionClass;
     }
 
     @Override
@@ -51,7 +57,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         String code = this.ecodeHandler.extractCode(exType);
         Ecode ecode = getEcodeFromFactory(code);
         if(ecode != null) {
-            return createException(exType, ecode.getMessage());
+            return createException(getExceptionRootClass(), ecode.getMessage());
         }
         return new EcodeException("the exception instance create fail");
     }
@@ -60,7 +66,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
     public RuntimeException newException(String code) {
         Ecode ecode = getEcodeFromFactory(code);
         if(ecode != null) {
-            return createException(rootExceptionClass, ecode.getMessage());
+            return createException(getExceptionRootClass(), ecode.getMessage());
         }
         return new EcodeException("the exception instance create fail");
     }

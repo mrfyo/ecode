@@ -45,7 +45,6 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
         this.location = location;
         this.objectMapper = objectMapper;
         this.ecodeType = ecodeType;
-        initEcodeCache();
     }
 
     public void setObjectMapper(ObjectMapper objectMapper) {
@@ -64,8 +63,10 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
         return ecodeType;
     }
 
+
+
     @Override
-    public List<Ecode> loadAllEcode() {
+    public List<Ecode> getAllEcode() {
         List<Ecode> list = new ArrayList<>(16);
         try {
             File dir = ResourceUtils.getFile(location);

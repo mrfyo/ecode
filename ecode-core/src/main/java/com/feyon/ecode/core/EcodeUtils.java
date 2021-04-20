@@ -7,25 +7,31 @@ public class EcodeUtils {
 
     private static EcodeManager ecodeManager;
 
-    public static void setExceptionFactory(EcodeManager ecodeManager) {
-        checkFactory();
+    public static void setEcodeManager(EcodeManager ecodeManager) {
         EcodeUtils.ecodeManager = ecodeManager;
     }
 
     public static RuntimeException toThrow(Class<? extends RuntimeException> exType) {
-        checkFactory();
+        checkManger();
         return ecodeManager.getExceptionFactory().newException(exType);
     }
 
     public static RuntimeException toThrow(String code) {
-        checkFactory();
+        checkManger();
         return ecodeManager.getExceptionFactory().newException(code);
     }
 
     public static Ecode getEcode(Class<? extends Exception> exType) {
-        checkFactory();
+        checkManger();
         String code = ecodeManager.getEcodeHandler().extractCode(exType);
         return getEcode(code);
+    }
+
+    public static Ecode getEcode(RuntimeException e) {
+        if(e instanceof EcodeSupport) {
+            return ((EcodeSupport)e).getEcode();
+        }
+        return null;
     }
 
     public static Ecode getEcode(String code) {
@@ -42,7 +48,7 @@ public class EcodeUtils {
     }
 
 
-    private static void checkFactory() {
+    private static void checkManger() {
         if (ecodeManager == null) {
             throw new EcodeException("the exceptionFactory is null. the Ecode can not use.");
         }

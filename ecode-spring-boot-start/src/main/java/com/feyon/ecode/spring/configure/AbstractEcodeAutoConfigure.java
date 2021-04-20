@@ -6,18 +6,19 @@ import com.feyon.ecode.core.AnnotationEcodeHandler;
 import com.feyon.ecode.core.DefaultEcodeManager;
 import com.feyon.ecode.core.SimpleExceptionFactory;
 import com.feyon.ecode.spring.JsonEcodeFactory;
-import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
 /**
  * @author Feyon
  */
-@Configuration
-public abstract class EcodeAutoConfigure {
+public abstract class AbstractEcodeAutoConfigure {
+
+
 
     public EcodeFactory ecodeFactory(ObjectMapper objectMapper) {
-        return new JsonEcodeFactory(objectMapper, SimpleEcode.class);
+        Class<? extends Ecode> ecodeType = getEcodeType();
+        return new JsonEcodeFactory(objectMapper, ecodeType);
     }
 
 
@@ -39,7 +40,12 @@ public abstract class EcodeAutoConfigure {
 
     @PostConstruct
     public void ecodeUtil(EcodeManager ecodeManager) {
-        EcodeUtils.setExceptionFactory(ecodeManager);
+        EcodeUtils.setEcodeManager(ecodeManager);
     }
 
+    /**
+     * 指定 Ecode 的具体类型，用户序列化
+     * @return Ecode 的具体类型
+     */
+    public abstract Class<? extends Ecode> getEcodeType();
 }

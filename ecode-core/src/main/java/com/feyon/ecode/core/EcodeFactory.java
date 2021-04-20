@@ -5,6 +5,8 @@ package com.feyon.ecode.core;
  */
 public interface EcodeFactory {
 
+    void initialize();
+
     /**
      * 从工厂中加载错误码消息
      * @param code 错误码
