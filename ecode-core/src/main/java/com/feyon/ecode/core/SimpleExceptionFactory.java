@@ -116,7 +116,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
             Constructor<? extends RuntimeException> constructor = clazz.getConstructor(String.class);
             return  constructor.newInstance(message);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            String errMsg = "the rootExceptionClass is not Exception";
+            String errMsg = "the rootExceptionClass is not Exception or the Exception not constructor that's param is 'message'";
             log.error(errMsg);
             throw new EcodeException(errMsg);
         }
