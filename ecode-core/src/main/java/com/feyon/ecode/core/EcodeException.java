@@ -26,4 +26,5 @@ public class EcodeException extends RuntimeException implements EcodeAware{
     public void setEcode(Ecode ecode) {
         this.ecode = ecode;
     }
+
 }

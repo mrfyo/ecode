@@ -50,5 +50,4 @@ public class DefaultEcodeManager implements EcodeManager {
     }
 
 
-
 }

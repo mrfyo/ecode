@@ -36,7 +36,7 @@ public class EcodeApp {
         try {
             service();
         }catch (RuntimeException e) {
-            Ecode ecode = EcodeUtils.getEcode(e);
+            Ecode ecode = EcodeUtils.getEcode(e.getClass());
             System.out.println(ecode);
         }
     }
