@@ -30,7 +30,8 @@ public class ExceptionFactoryTest {
         // 必须手动重启 EcodeFactory
         ecodeFactory.reload();
         EcodeHandler ecodeHandler = new AnnotationEcodeHandler();
-        exceptionFactory = new SimpleExceptionFactory(ecodeFactory, ecodeHandler);
+        DefaultEcodeManager manager = new DefaultEcodeManager(ecodeFactory, ecodeHandler);
+        exceptionFactory = manager.getExceptionFactory();
     }
 
     @Test

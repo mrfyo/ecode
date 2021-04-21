@@ -8,11 +8,15 @@ import static org.junit.Assert.*;
 
 public class AnnotationEcodeHandlerTest {
 
+    @EcodeTag(code = "10001")
+    static class AException extends  RuntimeException {
+
+    }
 
     @Test
     public void extractCode() {
         EcodeHandler ecodeHandler = new AnnotationEcodeHandler();
-        String code = ecodeHandler.extractCode(UserException.class);
+        String code = ecodeHandler.extractCode(AException.class);
         Assert.assertEquals(code, "10001");
     }
 }

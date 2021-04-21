@@ -14,36 +14,34 @@ public class SimpleExceptionFactory implements ExceptionFactory {
 
     private Class<? extends RuntimeException> rootExceptionClass;
 
-    private EcodeFactory ecodeFactory;
-
-    private EcodeHandler ecodeHandler;
 
 
-    public SimpleExceptionFactory(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
-        this.ecodeFactory = ecodeFactory;
-        this.ecodeHandler = ecodeHandler;
+    private EcodeManager ecodeManager;
+
+
+    public SimpleExceptionFactory() {
         setExceptionRootClass(EcodeException.class);
     }
 
-    public void setEcodeFactory(EcodeFactory ecodeFactory) {
-        this.ecodeFactory = ecodeFactory;
-    }
 
-    public void setEcodeHandler(EcodeHandler ecodeHandler) {
-        this.ecodeHandler = ecodeHandler;
-    }
+
 
     public EcodeFactory getEcodeFactory() {
-        return this.ecodeFactory;
+        return this.ecodeManager.getEcodeFactory();
     }
 
     public EcodeHandler getEcodeHandler() {
-        return this.ecodeHandler;
+        return this.ecodeManager.getEcodeHandler();
     }
 
     @Override
     public void setExceptionRootClass(Class<? extends RuntimeException> rootClass) {
         this.rootExceptionClass = rootClass;
+    }
+
+    @Override
+    public void setEcodeManager(EcodeManager manager) {
+        this.ecodeManager = manager;
     }
 
     protected Class<? extends RuntimeException> getExceptionRootClass() {
@@ -55,7 +53,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
 
     @Override
     public RuntimeException newException(Class<? extends RuntimeException> exType) {
-        String code = this.ecodeHandler.extractCode(exType);
+        String code = getEcodeHandler().extractCode(exType);
         return newException(exType, code);
     }
 
@@ -103,7 +101,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
      * @return 如果工厂中存在，返回{@link Ecode},否则返回 null.
      */
     private Ecode getEcodeFromFactory(String code) {
-        if(ecodeFactory == null) {
+        if(getEcodeFactory() == null) {
             String message = "the exception factory need the ecode-factory, but ecodeFactory is null";
             log.error(message);
             throw new RuntimeException(message);
@@ -111,7 +109,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         if (code == null || code.isEmpty()) {
             log.warn("the code cannot be empty");
         }
-        return ecodeFactory.getEcode(code);
+        return getEcodeFactory().getEcode(code);
     }
 
     private RuntimeException createException(Class<? extends RuntimeException> clazz, String message) {

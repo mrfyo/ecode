@@ -12,7 +12,7 @@ public class DefaultEcodeManager implements EcodeManager {
     private EcodeHandler ecodeHandler;
 
     public DefaultEcodeManager(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
-        this(new SimpleExceptionFactory(ecodeFactory, ecodeHandler), ecodeFactory, ecodeHandler);
+        this(new SimpleExceptionFactory(), ecodeFactory, ecodeHandler);
     }
 
 
@@ -20,6 +20,7 @@ public class DefaultEcodeManager implements EcodeManager {
         this.exceptionFactory = exceptionFactory;
         this.ecodeFactory = ecodeFactory;
         this.ecodeHandler = ecodeHandler;
+        exceptionFactory.setEcodeManager(this);
     }
 
     public void setExceptionFactory(ExceptionFactory exceptionFactory) {

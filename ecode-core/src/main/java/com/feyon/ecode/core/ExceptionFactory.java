@@ -20,6 +20,12 @@ public interface ExceptionFactory {
     void setExceptionRootClass(Class<? extends RuntimeException>  exType);
 
     /**
+     * 设置 {@link EcodeManager}
+     * @param manager {@link EcodeManager}
+     */
+    void setEcodeManager(EcodeManager manager);
+
+    /**
      * 根据给定的异常类型，生成新的异常类，并动态注入相应错误的异常信息
      * @param exType 自定义异常类，并且标注了 {@link EcodeTag}
      * @return 代理异常类并且实现了 {@link EcodeSupport}
