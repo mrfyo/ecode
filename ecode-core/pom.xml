@@ -12,6 +12,8 @@
     <version>1.0.0</version>
     <artifactId>ecode-core</artifactId>
 
+    <description>Ecode 核心包，没有提供对Ecode数据源的支持</description>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
