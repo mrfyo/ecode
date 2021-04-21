@@ -22,6 +22,7 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
 
     @Override
     public void reload() {
+        log.info("reload the Ecode.");
         initEcodeCache();
     }
 
@@ -46,6 +47,7 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
     protected void initEcodeCache() {
         List<Ecode> list = getAllEcode();
         if (list != null) {
+            log.info("[Ecode] the count of Ecode is {}", list.size());
             list.forEach(ecode -> ecodeCache.put(ecode.getCode(), ecode));
         } else {
             throw new RuntimeException("the ecode list cannot be null.");

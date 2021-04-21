@@ -1,11 +1,13 @@
 package com.feyon.ecode.core;
 
+
 /**
  * Ecode工具类，主要对 {@link EcodeManager} 的进行简单代理
  *
  * @author Feyon
  */
 public class EcodeUtils {
+
 
     private static EcodeManager ecodeManager;
 
@@ -15,6 +17,10 @@ public class EcodeUtils {
      */
     public static void setEcodeManager(EcodeManager ecodeManager) {
         EcodeUtils.ecodeManager = ecodeManager;
+        ecodeManager.reload();
+    }
+
+    public static void reload() {
         ecodeManager.reload();
     }
 
