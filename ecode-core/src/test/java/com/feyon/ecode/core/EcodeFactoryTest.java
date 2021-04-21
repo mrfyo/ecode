@@ -39,9 +39,33 @@ public class EcodeFactoryTest {
     }
 
     @Test
+    public void getMessageWhenCodeIsNull() {
+        String message = factory.getMessage(null);
+        Assert.assertNull(message);
+    }
+
+    @Test
+    public void getMessageWhenCodeIsEmpty() {
+        String message = factory.getMessage("");
+        Assert.assertNull(message);
+    }
+
+    @Test
     public void getEcode() {
         Ecode ecode = factory.getEcode("2");
         Assert.assertEquals(ecode.getCode(), "2");
         Assert.assertEquals(ecode.getMessage(), "错误 2");
+    }
+
+    @Test
+    public void getEcodeWhenCodeIsNull() {
+        Ecode ecode = factory.getEcode(null);
+        Assert.assertNull(ecode);
+    }
+
+    @Test
+    public void getEcodeWhenCodeIsEmpty() {
+        Ecode ecode = factory.getEcode("");
+        Assert.assertNull(ecode);
     }
 }

@@ -36,6 +36,10 @@ public abstract class AbstractEcodeFactory implements EcodeFactory {
         if (ecodeCache.isEmpty()) {
             throw new EcodeException("the ecode cache is empty. please call the reload method or check your ecode data source");
         }
+        if(code == null) {
+            log.error("the code cannot be null");
+            return null;
+        }
         return ecodeCache.get(code);
     }
 
