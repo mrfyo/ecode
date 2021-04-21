@@ -1,5 +1,6 @@
 package com.feyon.ecode.core;
 
+
 /**
  * 异常工厂类，主要用途是生成指定类型或者默认类型的异常类。
  * 1. 如果指定类型实现了接口{@link EcodeSupport}，该工厂类会再创建异常类后，会自动注入{@link Ecode}
@@ -35,7 +36,7 @@ public interface ExceptionFactory {
 
     /**
      * 根据给定的错误码，生成默认根异常类
-     * @param code 错误码
+     * @param code 错误码，不能为null
      * @return 根异常类 实现接口 {@link EcodeSupport}，默认是 {@link EcodeException}
      */
     RuntimeException newException(String code);

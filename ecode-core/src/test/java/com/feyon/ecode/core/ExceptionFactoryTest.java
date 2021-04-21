@@ -42,8 +42,23 @@ public class ExceptionFactoryTest {
     public void newException() {
         RuntimeException exception = exceptionFactory.newException("30000");
         Assert.assertEquals(exception.getClass(), EcodeException.class);
-
     }
+
+    @Test
+    public void newExceptionCodeIsNull() {
+        String code = null;
+        RuntimeException exception = exceptionFactory.newException(code);
+        Assert.assertTrue(exception instanceof IllegalArgumentException);
+    }
+
+    @Test
+    public void newExceptionCodeIsEmpty() {
+        String code = "";
+        RuntimeException exception = exceptionFactory.newException(code);
+        Assert.assertEquals(exception.getClass(), EcodeException.class);
+    }
+
+
 
     @Test
     public void testNewException() {
@@ -52,11 +67,12 @@ public class ExceptionFactoryTest {
     }
 
     /**
-     * 异常类必须实现 参数为 message 的构造方法
+     * 当异常类没有参数为 message 的构造方法时，将忽略注入移除信息，仅构建一个新的异常类
      */
     @Test
     public void testNewException2() {
         RuntimeException exception = exceptionFactory.newException(SystemException.class);
-        Assert.assertEquals(exception.getMessage(), "系统错误");
+        Assert.assertNull(exception.getMessage());
     }
+
 }

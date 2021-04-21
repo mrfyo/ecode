@@ -74,6 +74,9 @@ public class SimpleExceptionFactory implements ExceptionFactory {
 
     @Override
     public RuntimeException newException(String code) {
+        if(code == null) {
+            return new IllegalArgumentException("code cannot be null");
+        }
         Ecode ecode = getEcodeFromFactory(code);
         RuntimeException exception;
         if(ecode == null) {
@@ -89,7 +92,7 @@ public class SimpleExceptionFactory implements ExceptionFactory {
         if(exception instanceof EcodeSupport) {
             ((EcodeSupport)exception).setEcode(ecode);
         }else {
-            log.warn("the rootExceptionClass is not implements EcodeAware, " +
+            log.warn("the rootExceptionClass is not implements EcodeSupport, " +
                     "exception created will only normal exception.");
         }
     }
@@ -106,20 +109,28 @@ public class SimpleExceptionFactory implements ExceptionFactory {
             throw new RuntimeException(message);
         }
         if (code == null || code.isEmpty()) {
-            log.warn("the code cannot be empty, code is {}", code);
+            log.warn("the code cannot be empty");
         }
         return ecodeFactory.getEcode(code);
     }
 
     private RuntimeException createException(Class<? extends RuntimeException> clazz, String message) {
+        RuntimeException exception = null;
         try {
             Constructor<? extends RuntimeException> constructor = clazz.getConstructor(String.class);
-            return  constructor.newInstance(message);
+            exception = constructor.newInstance(message);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            String errMsg = "the rootExceptionClass is not Exception or the Exception not constructor that's param is 'message'";
-            log.error(errMsg);
-            throw new EcodeException(errMsg);
+            String errMsg = "the Exception not constructor that's param is 'message'";
+            log.warn(errMsg);
+            try {
+                exception = clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException ie) {
+                errMsg = "the Exception cannot construct new Instance. " + clazz;
+                log.warn(errMsg);
+                throw new EcodeException(errMsg);
+            }
         }
+        return exception;
     }
 
 }
