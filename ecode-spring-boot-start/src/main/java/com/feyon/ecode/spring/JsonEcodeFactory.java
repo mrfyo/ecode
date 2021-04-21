@@ -79,7 +79,7 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
                     }
                 }
             }else {
-                throw new FileNotFoundException("the location must be directory, path is " + dir.getPath());
+                throw new EcodeException("the location must be directory, path is " + dir.getPath());
             }
         }catch (IOException fe) {
             log.error("the location must be exist. default location is {}, " +
@@ -90,24 +90,20 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
     }
 
 
-    private List<Ecode> loadEcodeFromJson(File file) throws IOException{
-        return doLoadEcodeFromJson(file);
-    }
-
-
-    private List<Ecode> doLoadEcodeFromJson(File file) throws IOException{
-        List<Ecode> errorCodes = null;
+    private List<Ecode> loadEcodeFromJson(File file){
+        List<Ecode> errorCodes;
         try {
             Class<? extends Ecode> ecodeType = getEcodeType();
             JavaType javaType = objectMapper.getTypeFactory().constructParametricType(List.class, ecodeType);
             errorCodes = objectMapper.readValue(file, javaType);
         }catch (JsonParseException | JsonMappingException jpe) {
-            log.error("json file does not conform to the format, file is " + file.getName());
+            String errMsg = "json file does not conform to the format, file is" + file.getName();
+            log.error(errMsg);
+            throw new EcodeException(errMsg);
         }catch (IOException ie) {
-            throw new FileNotFoundException("the location must be json file, path is " + file.getPath());
+            throw new EcodeException("the location must be json file, path is " + file.getPath());
         }
         return errorCodes;
     }
-
 
 }
