@@ -20,7 +20,8 @@ import java.util.List;
  *
  * JsonEcodeFacory 借助 Jackson 将指定路径下的JSON文件序列化为指定类型（实现 ErrorCode接口），并缓存。
  *
- * 默认使用的Ecode类型 为 {@link SimpleEcode}
+ * 默认使用的Ecode类型 为 {@link SimpleEcode}, json文件中定义的{@link Ecode}必须与{@link Ecode}
+ * 的实现类属性保持一致，避免出现序列化错误，具体关于JSON序列化问题，请参考 {@link ObjectMapper}
  *
  */
 
@@ -78,9 +79,9 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
                     }
                 }
             }else {
-                throw new EcodeException("the location must be directory, path is " + dir.getPath());
+                throw new FileNotFoundException("the location must be directory, path is " + dir.getPath());
             }
-        }catch (FileNotFoundException fe) {
+        }catch (IOException fe) {
             log.error("the location must be exist. default location is {}, " +
                     "if you change the directory, please reset the location. {}", DEFAULT_LOCATION, location);
             fe.printStackTrace();
@@ -89,12 +90,12 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
     }
 
 
-    private List<Ecode> loadEcodeFromJson(File file){
+    private List<Ecode> loadEcodeFromJson(File file) throws IOException{
         return doLoadEcodeFromJson(file);
     }
 
 
-    private List<Ecode> doLoadEcodeFromJson(File file) {
+    private List<Ecode> doLoadEcodeFromJson(File file) throws IOException{
         List<Ecode> errorCodes = null;
         try {
             Class<? extends Ecode> ecodeType = getEcodeType();
@@ -103,7 +104,7 @@ public class JsonEcodeFactory extends AbstractEcodeFactory {
         }catch (JsonParseException | JsonMappingException jpe) {
             log.error("json file does not conform to the format, file is " + file.getName());
         }catch (IOException ie) {
-            throw new EcodeException("the location must be json file, path is " + file.getPath());
+            throw new FileNotFoundException("the location must be json file, path is " + file.getPath());
         }
         return errorCodes;
     }

@@ -1,4 +1,4 @@
-package com.feyon.ecode.spring.configure;
+package com.feyon.ecode.spring.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feyon.ecode.core.*;
@@ -13,8 +13,6 @@ import javax.annotation.PostConstruct;
  * @author Feyon
  */
 public abstract class AbstractEcodeAutoConfigure {
-
-
 
     public EcodeFactory ecodeFactory(ObjectMapper objectMapper) {
         Class<? extends Ecode> ecodeType = getEcodeType();
@@ -34,14 +32,16 @@ public abstract class AbstractEcodeAutoConfigure {
     }
 
 
-    public EcodeManager ecodeManager(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
-        return new DefaultEcodeManager(ecodeFactory, ecodeHandler);
+    public EcodeManager ecodeManager(ExceptionFactory factory, EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
+
+        DefaultEcodeManager ecodeManager =  new DefaultEcodeManager(factory, ecodeFactory, ecodeHandler);
+        if(factory == null) {
+            ecodeManager.setExceptionFactory(new SimpleExceptionFactory(ecodeFactory, ecodeHandler));
+        }
+        EcodeUtils.setEcodeManager(ecodeManager);
+        return ecodeManager;
     }
 
-    @PostConstruct
-    public void ecodeUtil(EcodeManager ecodeManager) {
-        EcodeUtils.setEcodeManager(ecodeManager);
-    }
 
     /**
      * 指定 Ecode 的具体类型，用户序列化

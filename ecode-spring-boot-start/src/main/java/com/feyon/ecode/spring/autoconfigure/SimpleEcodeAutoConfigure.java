@@ -1,4 +1,4 @@
-package com.feyon.ecode.spring.configure;
+package com.feyon.ecode.spring.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.feyon.ecode.core.*;
@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 public class SimpleEcodeAutoConfigure extends AbstractEcodeAutoConfigure{
+
     @Override
     public Class<? extends Ecode> getEcodeType() {
         return SimpleEcode.class;
@@ -22,6 +23,7 @@ public class SimpleEcodeAutoConfigure extends AbstractEcodeAutoConfigure{
 
     @Bean
     @ConditionalOnMissingBean(EcodeFactory.class)
+    @ConditionalOnBean(ObjectMapper.class)
     @Override
     public EcodeFactory ecodeFactory(ObjectMapper objectMapper) {
         return super.ecodeFactory(objectMapper);
@@ -44,13 +46,9 @@ public class SimpleEcodeAutoConfigure extends AbstractEcodeAutoConfigure{
     @Bean
     @ConditionalOnMissingBean(EcodeManager.class)
     @Override
-    public EcodeManager ecodeManager(EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
-        return super.ecodeManager(ecodeFactory, ecodeHandler);
+    public EcodeManager ecodeManager(ExceptionFactory factory, EcodeFactory ecodeFactory, EcodeHandler ecodeHandler) {
+        return super.ecodeManager(factory, ecodeFactory, ecodeHandler);
     }
 
-    @PostConstruct
-    @Override
-    public void ecodeUtil(EcodeManager ecodeManager) {
-        super.ecodeUtil(ecodeManager);
-    }
+
 }
