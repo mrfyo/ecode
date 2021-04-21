@@ -20,9 +20,10 @@ public class EcodeUtils {
         ecodeManager.reload();
     }
 
-    public static void reload() {
-        ecodeManager.reload();
+    public static EcodeManager getEcodeManager() {
+        return ecodeManager;
     }
+
 
     /**
      * 根据指定异常类型 (经过注解{@link EcodeTag}标记过) 动态新建异常对象
