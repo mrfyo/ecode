@@ -10,16 +10,16 @@ public interface EcodeFactory extends Reloadable{
 
     /**
      * 从工厂中加载错误码消息
-     * @param code 错误码
-     * @return 错误码消息
+     * @param code 错误码（notNull)
+     * @return 错误码消息, 如果code时{@link null},将直接放回{@link null}
      */
     String getMessage(String code);
 
 
     /**
      * 从工厂中获取 Ecode
-     * @param code 错误码
-     * @return 错误码消息
+     * @param code 错误码（notNull)
+     * @return 错误码消息, 如果code时{@link null},将直接放回{@link null}
      */
     Ecode getEcode(String code);
 

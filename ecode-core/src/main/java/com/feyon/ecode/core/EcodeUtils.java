@@ -63,7 +63,7 @@ public class EcodeUtils {
 
     /**
      * 根据给定的{@link EcodeFactory}读取{@link Ecode}
-     * @param code 错误码
+     * @param code 错误码（notNull)
      * @return 如果 {@link EcodeFactory}存在则返回{@link Ecode}，否则返回 null
      */
     public static Ecode getEcode(String code) {
@@ -72,7 +72,7 @@ public class EcodeUtils {
 
     /**
      * 根据给定的{@link EcodeFactory}读取{@link Ecode}，同时返回指定的{@link Ecode}
-     * @param code 错误码
+     * @param code 错误码（notNull)
      * @param <T> {@link Ecode}的实现类，默认是{@link SimpleEcode}
      * @return 如果 {@link EcodeFactory}存在则返回{@link Ecode}，否则{@link null}
      */
