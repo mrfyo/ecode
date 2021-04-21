@@ -8,13 +8,14 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
     <artifactId>ecode-core</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-
+        <slf4j.version>1.7.26</slf4j.version>
     </properties>
     <dependencies>
 
